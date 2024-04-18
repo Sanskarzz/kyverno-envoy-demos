@@ -194,6 +194,52 @@ spec:
                                 (split(@, ':')[0]): alice
                     path: /foo                              
 ```
+Here is the Comman format of CheckRequest payload, Envoy transmits a [CheckRequest](https://www.envoyproxy.io/docs/envoy/latest/api-v3/service/auth/v3/external_auth.proto#service-auth-v3-checkrequest) in Protobuf format to an external authorization service (which is our kyverno-envoy-plugin) for making access control decisions. This payload is then converted into a JSON format (inside kyverno-envoy-plugin) and evaluated against the defined policy within the Kyverno JSON engine.
+
+```json
+{
+  "source": {
+    "address": {
+      "socketAddress": {
+        "address": "10.244.1.10",
+        "portValue": 59252
+      }
+    }
+  },
+  "destination": {
+    "address": {
+      "socketAddress": {
+        "address": "10.244.1.4",
+        "portValue": 8080
+      }
+    }
+  },
+  "request": {
+    "time": "2024-04-09T07:42:29.634453Z",
+    "http": {
+      "id": "14694995155993896575",
+      "method": "GET",
+      "headers": {
+        ":authority": "echo.demo.svc.cluster.local:8080",
+        ":method": "GET",
+        ":path": "/foo",
+        ":scheme": "http",
+        "authorization": "Basic YWxpY2U6cGFzc3dvcmQ=",
+        "user-agent": "Wget",
+        "x-forwarded-proto": "http",
+        "x-request-id": "27cd2724-e0f4-4a69-a1b1-9a94edfa31bb"
+      },
+      "path": "/foo",
+      "host": "echo.demo.svc.cluster.local:8080",
+      "scheme": "http",
+      "protocol": "HTTP/1.1"
+    }
+  },
+  "metadataContext": {},
+  "routeMetadataContext": {}
+}
+
+```
 
 The following command will deploy the kyverno external authorizer server:
 
