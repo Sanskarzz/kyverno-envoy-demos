@@ -32,13 +32,19 @@ Manifests for the sample application are available in [sample-application.yaml](
 kubectl apply -f ./manifests/sample-application.yaml
 ```
 
+Check pods is running 
+```console 
+kubectl get pods -n demo
+```
+
 ### Calling the sample application
 
 We are going to call the sample application using a pod in the cluster.
 
 ```console
 kubectl run test -it --rm --restart=Never --image=busybox -- wget -q --output-document - echo.demo.svc.cluster.local:8080/foo
-
+```
+```
 {
   "path": "/foo",
   "headers": {
@@ -250,6 +256,8 @@ Verify the sample external authorizer is up and running:
 
 ```console
 kubectl logs "$(kubectl get pod -l app=ext-authz -n demo -o jsonpath={.items..metadata.name})" -n demo -c ext-authz -f
+```
+```
 Starting HTTP server on Port 8000
 Starting GRPC server on Port 9000
 
@@ -261,7 +269,9 @@ Calling the sample application again at the `/foo` path, and include an authoriz
 
 ```console
 kubectl run test -it --rm --restart=Never --image=busybox -- wget -q --header="authorization: Basic YWxpY2U6cGFzc3dvcmQ=" --output-document - echo.demo.svc.cluster.local:8080/foo
+```
 
+```console
 
 {
   "path": "/foo",
@@ -299,6 +309,8 @@ Check the log of the sample ext_authz server to confirm it was called .
 
 ```console
 kubectl logs "$(kubectl get pod -l app=ext-authz -n demo -o jsonpath={.items..metadata.name})" -n demo -c ext-authz -f
+```
+```
 Starting HTTP server on Port 8000
 Starting GRPC server on Port 9000
 Request is initialized in kyvernojson engine .
@@ -310,8 +322,8 @@ Calling the sample application again at the `/bar` path , and include an authori
 
 ```console
 kubectl run test -it --rm --restart=Never --image=busybox -- wget -q --header="authorization: Basic Ym9iOnBhc3N3b3Jk" --output-document - echo.demo.svc.cluster.local:8080/bar
-
-
+```
+```
 wget: server returned error: HTTP/1.1 403 Forbidden
 pod "test" deleted
 pod default/test terminated (Error)
@@ -321,7 +333,8 @@ Check the log of the sample ext_authz server to confirm it was called twice. The
 
 ```console
 kubectl logs "$(kubectl get pod -l app=ext-authz -n demo -o jsonpath={.items..metadata.name})" -n demo -c ext-authz -f
-
+```
+```
 sanskar@sanskar-HP-Laptop-15s-du1xxx:~$ kubectl logs "$(kubectl get pod -l app=ext-authz -n demo -o jsonpath={.items..metadata.name})" -n demo -c ext-authz -f
 Starting HTTP server on Port 8000
 Starting GRPC server on Port 9000
