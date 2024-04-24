@@ -22,6 +22,7 @@ The [bootstrap.sh](bootstrap.sh) script contains everything needed to create a l
 # create a local cluster and install istio
 ./bootstrap.sh
 ```
+### Install 
 
 ### Sample application
 
@@ -344,4 +345,31 @@ Request is initialized in kyvernojson engine .
 2024/04/18 13:36:48 Request violation: -> GET method calls at path /foo are not allowed to guest
  -> all[0].check.request.http.headers.authorization.(base64_decode(split(@, ' ')[1])).(split(@, ':')[0]): Invalid value: "bob": Expected value: "alice"
  -> all[0].check.request.http.path: Invalid value: "/bar": Expected value: "/foo"
+```
+
+
+
+```bash
+export ALICE_TOKEN="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjIyNDEwODE1MzksIm5iZiI6MTUxNDg1MTEzOSwicm9sZSI6Imd1ZXN0Iiwic3ViIjoiWVd4cFkyVT0ifQ.ja1bgvIt47393ba_WbSBm35NrUhdxM4mOVQN8iXz8lk"
+
+```
+
+```bash
+export BOB_TOKEN="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjIyNDEwODE1MzksIm5iZiI6MTUxNDg1MTEzOSwicm9sZSI6ImFkbWluIiwic3ViIjoiWVd4cFkyVT0ifQ.veMeVDYlulTdieeX-jxFZ_tCmqQ_K8rwx2OktUHv5Z0"
+
+```
+
+
+```bash
+kubectl port-forward service/echo -n demo 8080:8080
+```
+
+```bash
+curl -i -H "Authorization: Bearer "$ALICE_TOKEN"" http://localhost:8080/book
+curl -i -H "Authorization: Bearer "$ALICE_TOKEN"" -d '{"bookname":"Harry Potter", "author":"J.K. Rowling"}' -H "Content-Type: application/json" -X POST http://localhost:8080/book
+```
+
+```bash
+curl -i -H "Authorization: Bearer "$BOB_TOKEN"" http://localhost:8080/book
+curl -i -H "Authorization: Bearer "$ALICE_TOKEN"" -d '{"bookname":"Harry Potter", "author":"J.K. Rowling"}' -H "Content-Type: application/json" -X POST http://localhost:8080/book
 ```

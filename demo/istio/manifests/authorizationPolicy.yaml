@@ -1,7 +1,8 @@
+# AuthorizationPolicy to tell Istio to use kyverno-envoy-plugin as the Authz Server
 apiVersion: security.istio.io/v1
 kind: AuthorizationPolicy
 metadata:
-  name: ext-authz
+  name: kyverno-ext-authz-grpc
   namespace: demo
 spec:
   action: CUSTOM
@@ -12,6 +13,5 @@ spec:
   # The rules specify when to trigger the external authorizer.
   - to:
     - operation:
-        paths: ["/foo"]
-    - operation:    
-        paths: ["/bar"]
+        notPaths: ["/healthz"]
+    

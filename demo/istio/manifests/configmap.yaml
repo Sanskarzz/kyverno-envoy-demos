@@ -14,14 +14,14 @@ data:
         - name: deny-guest-request
           assert:
             all:
-            - message: "GET method calls at path /foo are not allowed to guest"
+            - message: "GET method calls at path /book are not allowed to guest"
               check:
                 request:
                     http:
                         method: GET
                         headers:
                             authorization:
-                                (base64_decode(split(@, ' ')[1])): 
-                                    (split(@, ':')[0]): alice
-                        path: /foo        
+                                (split(@, ' ')[1]):
+                                    (jwt_decode(@ , 'secret').payload.role): guest
+                        path: /book        
                      

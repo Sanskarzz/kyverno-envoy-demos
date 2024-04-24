@@ -1,0 +1,16 @@
+# ServiceEntry to register the Kyverno-Envoy sidecars as external authorizers.
+############################################################
+apiVersion: networking.istio.io/v1beta1
+kind: ServiceEntry
+metadata:
+  name: kyverno-ext-authz-grpc-local
+spec:
+  hosts:
+  - "kyverno-ext-authz-grpc.local"
+  endpoints:
+  - address: "127.0.0.1"
+  ports:
+  - name: grpc
+    number: 9000
+    protocol: GRPC
+  resolution: STATIC

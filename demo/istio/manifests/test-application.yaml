@@ -18,11 +18,12 @@ spec:
   template:
     metadata:
       labels:
+        kyverno-envoy-sidecar/injection: enabled
         app: echo
     spec:
       containers:
       - name: echo
-        image: mendhak/http-https-echo
+        image: sanskardevops/test-application:0.0.1
         ports:
         - containerPort: 8080
 ---
@@ -32,7 +33,7 @@ metadata:
   name: echo
   namespace: demo
 spec:
-  type: ClusterIP  
+  type: ClusterIP
   selector:
     app: echo
   ports:
