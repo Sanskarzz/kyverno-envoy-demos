@@ -2,26 +2,26 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: policy-files
-  namespace: demo
+  namespace: default
 data:
   policy.yaml: |
     apiVersion: json.kyverno.io/v1alpha1
     kind: ValidatingPolicy
     metadata:
-      name: checkrequest
+      name: check-dockerfile
     spec:
       rules:
-        - name: deny-guest-request
+        - name: deny-external-calls
           assert:
             all:
-            - message: "GET method calls at path /book are not allowed to guest"
+            - message: "HTTP calls are not allowed"
               check:
                 request:
                     http:
                         method: GET
                         headers:
                             authorization:
-                                (split(@, ' ')[1]):
-                                    (jwt_decode(@ , 'secret').payload.role): guest
-                        path: /book        
+                                (base64_decode(split(@, ' ')[1])): 
+                                    (split(@, ':')[0]): alice
+                        path: /foo        
                      
