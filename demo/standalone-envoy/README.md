@@ -150,3 +150,12 @@ Request is initialized in kyvernojson engine .
 Request is initialized in kyvernojson engine .
 2024/04/26 17:23:55 Request passed the deny-guest-request-at-post policy rule.
 ```
+
+
+```bash
+curl -i -H "Authorization: Bearer "$ALICE_TOKEN"" -d '{"bookname":"Harry Potter", "author":"J.K. Rowling"}' -H "Content-Type: application/json" -X POST http://$SERVICE_URL/book
+```
+
+```bash
+curl -i -H "Authorization: Bearer "$ALICE_TOKEN"" http://$SERVICE_URL/book
+```
